@@ -1,21 +1,7 @@
 ﻿using Brighthr.TechnicalInterview.Kumar.DataStore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Brighthr.TechnicalInterview.Kumar.Checkout
 {
-    public interface IProductGroupDiscountService
-    {
-        void CreateProductGroupDiscount(ProductGroupDiscount discount);
-        ProductGroupDiscount ReadProductGroupDiscount(int discountId);
-        void UpdateProductGroupDiscount(ProductGroupDiscount updatedDiscount);
-        void DeleteProductGroupDiscount(int discountId);
-        List<IDiscount> GetApplicableDiscounts(int productId, int productCount);
-    }
-
     public class ProductGroupDiscountService : IProductGroupDiscountService
     {
         private IDataStore dataStore;
@@ -74,7 +60,7 @@ namespace Brighthr.TechnicalInterview.Kumar.Checkout
             if (discount != null)
             {
 
-                    dataStore.ProductGroupDiscounts.Remove(discount);
+                dataStore.ProductGroupDiscounts.Remove(discount);
 
             }
             else

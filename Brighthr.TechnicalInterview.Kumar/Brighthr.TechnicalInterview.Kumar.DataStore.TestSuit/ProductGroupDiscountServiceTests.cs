@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Brighthr.TechnicalInterview.Kumar.Checkout;
+﻿using Brighthr.TechnicalInterview.Kumar.Checkout;
 
 namespace Brighthr.TechnicalInterview.Kumar.DataStore.TestSuit
 {
@@ -11,14 +6,14 @@ namespace Brighthr.TechnicalInterview.Kumar.DataStore.TestSuit
     [TestFixture]
     public class ProductGroupDiscountServiceTests
     {
-        private IDataStore dataStore;
-        private IProductGroupDiscountService discountService;
+        private IDataStore _dataStore;
+        private IProductGroupDiscountService _discountService;
 
         [SetUp]
         public void Initialize()
         {
-            dataStore = new InMemory();
-            discountService = new ProductGroupDiscountService(dataStore);
+            _dataStore = new InMemory();
+            _discountService = new ProductGroupDiscountService(_dataStore);
         }
 
         [Test]
@@ -32,7 +27,7 @@ namespace Brighthr.TechnicalInterview.Kumar.DataStore.TestSuit
                 SKU = "SKU001",
                 Price = 9.99m
             };
-            dataStore.Products.Add(product);
+            _dataStore.Products.Add(product);
             var discount = new ProductGroupDiscount
             {
                 Id = 10, // Ignoring the passed-in ID
@@ -43,11 +38,11 @@ namespace Brighthr.TechnicalInterview.Kumar.DataStore.TestSuit
             };
 
             // Act
-            discountService.CreateProductGroupDiscount(discount);
+            _discountService.CreateProductGroupDiscount(discount);
 
             // Assert
-            Assert.AreEqual(1, dataStore.ProductGroupDiscounts.Count);
-            var createdDiscount = dataStore.ProductGroupDiscounts[0];
+            Assert.AreEqual(1, _dataStore.ProductGroupDiscounts.Count);
+            var createdDiscount = _dataStore.ProductGroupDiscounts[0];
             Assert.AreEqual(discount.ProductId, createdDiscount.ProductId);
             Assert.AreEqual(discount.DiscountName, createdDiscount.DiscountName);
             Assert.AreEqual(discount.Price, createdDiscount.Price);
@@ -69,7 +64,7 @@ namespace Brighthr.TechnicalInterview.Kumar.DataStore.TestSuit
                 SKU = "SKU001",
                 Price = 9.99m
             };
-            dataStore.Products.Add(product);
+            _dataStore.Products.Add(product);
 
             var discount = new ProductGroupDiscount
             {
@@ -80,11 +75,11 @@ namespace Brighthr.TechnicalInterview.Kumar.DataStore.TestSuit
             };
 
             // Act
-            discountService.CreateProductGroupDiscount(discount);
+            _discountService.CreateProductGroupDiscount(discount);
 
             // Assert
-            Assert.AreEqual(1, dataStore.ProductGroupDiscounts.Count);
-            var createdDiscount = dataStore.ProductGroupDiscounts[0];
+            Assert.AreEqual(1, _dataStore.ProductGroupDiscounts.Count);
+            var createdDiscount = _dataStore.ProductGroupDiscounts[0];
             Assert.AreEqual(discount.ProductId, createdDiscount.ProductId);
             Assert.AreEqual(discount.DiscountName, createdDiscount.DiscountName);
             Assert.AreEqual(discount.Price, createdDiscount.Price);
@@ -105,7 +100,7 @@ namespace Brighthr.TechnicalInterview.Kumar.DataStore.TestSuit
             };
 
             // Act and Assert
-            Assert.Throws<ArgumentException>(() => discountService.CreateProductGroupDiscount(discount));
+            Assert.Throws<ArgumentException>(() => _discountService.CreateProductGroupDiscount(discount));
         }
 
         [Test]
@@ -119,7 +114,7 @@ namespace Brighthr.TechnicalInterview.Kumar.DataStore.TestSuit
                 SKU = "SKU001",
                 Price = 9.99m
             };
-            dataStore.Products.Add(product);
+            _dataStore.Products.Add(product);
 
             var existingDiscount = new ProductGroupDiscount
             {
@@ -129,7 +124,7 @@ namespace Brighthr.TechnicalInterview.Kumar.DataStore.TestSuit
                 Price = 19.99m,
                 ProductCount = 5
             };
-            dataStore.ProductGroupDiscounts.Add(existingDiscount);
+            _dataStore.ProductGroupDiscounts.Add(existingDiscount);
 
             var updatedDiscount = new ProductGroupDiscount
             {
@@ -141,10 +136,10 @@ namespace Brighthr.TechnicalInterview.Kumar.DataStore.TestSuit
             };
 
             // Act
-            discountService.UpdateProductGroupDiscount(updatedDiscount);
+            _discountService.UpdateProductGroupDiscount(updatedDiscount);
 
             // Assert
-            var result = dataStore.ProductGroupDiscounts.FirstOrDefault(d => d.Id == existingDiscount.Id);
+            var result = _dataStore.ProductGroupDiscounts.FirstOrDefault(d => d.Id == existingDiscount.Id);
             Assert.IsNotNull(result);
             Assert.AreEqual(updatedDiscount.DiscountName, result.DiscountName);
             Assert.AreEqual(updatedDiscount.Price, result.Price);
@@ -165,7 +160,7 @@ namespace Brighthr.TechnicalInterview.Kumar.DataStore.TestSuit
             };
 
             // Act and Assert
-            Assert.Throws<ArgumentException>(() => discountService.UpdateProductGroupDiscount(updatedDiscount));
+            Assert.Throws<ArgumentException>(() => _discountService.UpdateProductGroupDiscount(updatedDiscount));
         }
 
         [Test]
@@ -180,7 +175,7 @@ namespace Brighthr.TechnicalInterview.Kumar.DataStore.TestSuit
                 Price = 19.99m,
                 ProductCount = 5
             };
-            dataStore.ProductGroupDiscounts.Add(existingDiscount);
+            _dataStore.ProductGroupDiscounts.Add(existingDiscount);
 
             var updatedDiscount = new ProductGroupDiscount
             {
@@ -192,7 +187,7 @@ namespace Brighthr.TechnicalInterview.Kumar.DataStore.TestSuit
             };
 
             // Act and Assert
-            Assert.Throws<ArgumentException>(() => discountService.UpdateProductGroupDiscount(updatedDiscount));
+            Assert.Throws<ArgumentException>(() => _discountService.UpdateProductGroupDiscount(updatedDiscount));
         }
 
         [Test]
@@ -207,10 +202,10 @@ namespace Brighthr.TechnicalInterview.Kumar.DataStore.TestSuit
                 Price = 19.99m,
                 ProductCount = 5
             };
-            dataStore.ProductGroupDiscounts.Add(discount);
+            _dataStore.ProductGroupDiscounts.Add(discount);
 
             // Act
-            var result = discountService.ReadProductGroupDiscount(1);
+            var result = _discountService.ReadProductGroupDiscount(1);
 
             // Assert
             Assert.AreEqual(discount, result);
@@ -227,7 +222,7 @@ namespace Brighthr.TechnicalInterview.Kumar.DataStore.TestSuit
                 SKU = "SKU001",
                 Price = 9.99m
             };
-            dataStore.Products.Add(product);
+            _dataStore.Products.Add(product);
 
             var existingDiscount = new ProductGroupDiscount
             {
@@ -237,13 +232,13 @@ namespace Brighthr.TechnicalInterview.Kumar.DataStore.TestSuit
                 Price = 19.99m,
                 ProductCount = 5
             };
-            dataStore.ProductGroupDiscounts.Add(existingDiscount);
+            _dataStore.ProductGroupDiscounts.Add(existingDiscount);
 
             // Act
-            discountService.DeleteProductGroupDiscount(existingDiscount.Id);
+            _discountService.DeleteProductGroupDiscount(existingDiscount.Id);
 
             // Assert
-            Assert.AreEqual(0, dataStore.ProductGroupDiscounts.Count);
+            Assert.AreEqual(0, _dataStore.ProductGroupDiscounts.Count);
         }
 
         [Test]
@@ -253,7 +248,7 @@ namespace Brighthr.TechnicalInterview.Kumar.DataStore.TestSuit
             var discountId = 1; // Non-existent discount ID
 
             // Act and Assert
-            Assert.Throws<ArgumentException>(() => discountService.DeleteProductGroupDiscount(discountId));
+            Assert.Throws<ArgumentException>(() => _discountService.DeleteProductGroupDiscount(discountId));
         }
 
         [Test]
@@ -272,10 +267,10 @@ namespace Brighthr.TechnicalInterview.Kumar.DataStore.TestSuit
                 ProductCount = 5,
                 Price = 200
             };
-            dataStore.ProductGroupDiscounts.AddRange(new List<ProductGroupDiscount> { discount1, discount2 });
+            _dataStore.ProductGroupDiscounts.AddRange(new List<ProductGroupDiscount> { discount1, discount2 });
 
             // Act
-            var discounts = discountService.GetApplicableDiscounts(1, 3);
+            var discounts = _discountService.GetApplicableDiscounts(1, 3);
 
             // Assert
             Assert.IsNotNull(discounts);
@@ -293,10 +288,10 @@ namespace Brighthr.TechnicalInterview.Kumar.DataStore.TestSuit
                 ProductCount = 3,
                 Price = 130
             };
-            dataStore.ProductGroupDiscounts.Add(discount);
+            _dataStore.ProductGroupDiscounts.Add(discount);
 
             // Act
-            var discounts = discountService.GetApplicableDiscounts(2, 3);
+            var discounts = _discountService.GetApplicableDiscounts(2, 3);
 
             // Assert
             Assert.IsNotNull(discounts);
@@ -319,10 +314,10 @@ namespace Brighthr.TechnicalInterview.Kumar.DataStore.TestSuit
                 ProductCount = 3,
                 Price = 60
             };
-            dataStore.ProductGroupDiscounts.AddRange(new List<ProductGroupDiscount> { discount1, discount2 });
+            _dataStore.ProductGroupDiscounts.AddRange(new List<ProductGroupDiscount> { discount1, discount2 });
 
             // Act
-            var discounts = discountService.GetApplicableDiscounts(1, 3);
+            var discounts = _discountService.GetApplicableDiscounts(1, 3);
 
             // Assert
             Assert.IsNotNull(discounts);

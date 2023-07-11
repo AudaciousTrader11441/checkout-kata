@@ -5,18 +5,18 @@ namespace Brighthr.TechnicalInterview.Kumar.Checkout.TestSuit
     [TestFixture]
     public class ProductGroupDiscountTest
     {
-        private IDataStore dataStore;
-        private IProductService productService;
-        private IProductGroupDiscountService productGroupDiscountService;
-        private CheckoutCart checkout;
+        private IDataStore _dataStore;
+        private IProductService _productService;
+        private IProductGroupDiscountService _productGroupDiscountService;
+        private CheckoutCart _checkout;
 
         [SetUp]
         public void Setup()
         {
-            dataStore = new InMemory();
-            productService = new ProductService(dataStore);
-            productGroupDiscountService = new ProductGroupDiscountService(dataStore);
-            checkout = new CheckoutCart(dataStore, productService, productGroupDiscountService);
+            _dataStore = new InMemory();
+            _productService = new ProductService(_dataStore);
+            _productGroupDiscountService = new ProductGroupDiscountService(_dataStore);
+            _checkout = new CheckoutCart(_dataStore, _productService, _productGroupDiscountService);
         }
 
         [Test]
@@ -38,13 +38,13 @@ namespace Brighthr.TechnicalInterview.Kumar.Checkout.TestSuit
                 ProducePrice = 0m // Initialize to 0 for testing
             };
 
-            dataStore.Products.Add(product);
-            checkout.CurrentCart.Products.Add(cartProduct);
+            _dataStore.Products.Add(product);
+            _checkout.CurrentCart.Products.Add(cartProduct);
 
             // Act
-            checkout.LoadProductGroupDiscount();
+            _checkout.LoadProductGroupDiscount();
 
-                // Assert
+            // Assert
             Assert.AreEqual(29.97f, cartProduct.ProducePrice); // Regular price: 3 * 9.99 = 29.97
         }
 
@@ -77,12 +77,12 @@ namespace Brighthr.TechnicalInterview.Kumar.Checkout.TestSuit
                 ProducePrice = 0m // Initialize to 0 for testing
             };
 
-            dataStore.Products.Add(product);
-            dataStore.ProductGroupDiscounts.Add(discount);
-            checkout.CurrentCart.Products.Add(cartProduct);
+            _dataStore.Products.Add(product);
+            _dataStore.ProductGroupDiscounts.Add(discount);
+            _checkout.CurrentCart.Products.Add(cartProduct);
 
             // Act
-            checkout.LoadProductGroupDiscount();
+            _checkout.LoadProductGroupDiscount();
 
             // Assert
             Assert.AreEqual(39.98f, cartProduct.ProducePrice); // Discounted price: (1 * 20) + (2 * 9.99) = 39.98
@@ -126,13 +126,13 @@ namespace Brighthr.TechnicalInterview.Kumar.Checkout.TestSuit
                 ProducePrice = 0m // Initialize to 0 for testing
             };
 
-            dataStore.Products.Add(product);
-            dataStore.ProductGroupDiscounts.Add(discount1);
-            dataStore.ProductGroupDiscounts.Add(discount2);
-            checkout.CurrentCart.Products.Add(cartProduct);
+            _dataStore.Products.Add(product);
+            _dataStore.ProductGroupDiscounts.Add(discount1);
+            _dataStore.ProductGroupDiscounts.Add(discount2);
+            _checkout.CurrentCart.Products.Add(cartProduct);
 
             // Act
-            checkout.LoadProductGroupDiscount();
+            _checkout.LoadProductGroupDiscount();
 
             // Assert
             Assert.That(cartProduct.ProducePrice, Is.EqualTo(59.99m)); // Discounted price: (1 * 30) + (1 * 20) + (1 * 9.99) = 69.99
@@ -176,13 +176,13 @@ namespace Brighthr.TechnicalInterview.Kumar.Checkout.TestSuit
                 ProducePrice = 0m // Initialize to 0 for testing
             };
 
-            dataStore.Products.Add(product);
-            dataStore.ProductGroupDiscounts.Add(discount1);
-            dataStore.ProductGroupDiscounts.Add(discount2);
-            checkout.CurrentCart.Products.Add(cartProduct);
+            _dataStore.Products.Add(product);
+            _dataStore.ProductGroupDiscounts.Add(discount1);
+            _dataStore.ProductGroupDiscounts.Add(discount2);
+            _checkout.CurrentCart.Products.Add(cartProduct);
 
             // Act
-            checkout.LoadProductGroupDiscount();
+            _checkout.LoadProductGroupDiscount();
 
             // Assert
             Assert.AreEqual(89.99m, cartProduct.ProducePrice); // Discounted price: (2 * 30) + (1 * 20) + (1 * 9.99) = 89.99
@@ -226,19 +226,19 @@ namespace Brighthr.TechnicalInterview.Kumar.Checkout.TestSuit
                 ProducePrice = 0m // Initialize to 0 for testing
             };
 
-            dataStore.Products.Add(product);
-            dataStore.ProductGroupDiscounts.Add(discount1);
-            dataStore.ProductGroupDiscounts.Add(discount2);
-            checkout.CurrentCart.Products.Add(cartProduct);
+            _dataStore.Products.Add(product);
+            _dataStore.ProductGroupDiscounts.Add(discount1);
+            _dataStore.ProductGroupDiscounts.Add(discount2);
+            _checkout.CurrentCart.Products.Add(cartProduct);
 
             // Act
-            checkout.LoadProductGroupDiscount();
+            _checkout.LoadProductGroupDiscount();
 
             // Assert
             Assert.AreEqual(39.96f, cartProduct.ProducePrice); // Discounted price: (4 * 9.99) = 39.96
         }
 
-        
+
         [Test]
 
         public void LoadProductGroupDiscount_ShouldSetProducePriceToRegularPrice_WhenNoDiscountsAndInvalidProductId()
@@ -251,10 +251,10 @@ namespace Brighthr.TechnicalInterview.Kumar.Checkout.TestSuit
                 ProducePrice = 0m // Initialize to 0 for testing
             };
 
-            checkout.CurrentCart.Products.Add(cartProduct);
+            _checkout.CurrentCart.Products.Add(cartProduct);
 
             // Act
-            checkout.LoadProductGroupDiscount();
+            _checkout.LoadProductGroupDiscount();
 
             // Assert
             Assert.AreEqual(0m, cartProduct.ProducePrice); // Regular price: 0 (since invalid product ID)
@@ -279,11 +279,11 @@ namespace Brighthr.TechnicalInterview.Kumar.Checkout.TestSuit
                 ProducePrice = 0m // Initialize to 0 for testing
             };
 
-            dataStore.ProductGroupDiscounts.Add(discount);
-            checkout.CurrentCart.Products.Add(cartProduct);
+            _dataStore.ProductGroupDiscounts.Add(discount);
+            _checkout.CurrentCart.Products.Add(cartProduct);
 
             // Act
-            checkout.LoadProductGroupDiscount();
+            _checkout.LoadProductGroupDiscount();
 
             // Assert
             Assert.AreEqual(0m, cartProduct.ProducePrice); // Regular price: 0 (since invalid product ID)
@@ -292,10 +292,10 @@ namespace Brighthr.TechnicalInterview.Kumar.Checkout.TestSuit
         public void LoadProductGroupDiscount_ShouldNotSetProducePrice_WhenCartIsEmpty()
         {
             // Arrange
-            var cart = checkout.CreateCart();
+            var cart = _checkout.CreateCart();
 
             // Act
-            checkout.LoadProductGroupDiscount();
+            _checkout.LoadProductGroupDiscount();
 
             // Assert
             Assert.IsEmpty(cart.Products); // Cart should remain empty
@@ -334,13 +334,13 @@ namespace Brighthr.TechnicalInterview.Kumar.Checkout.TestSuit
                 ProducePrice = 0m // Initialize to 0 for testing
             };
 
-            dataStore.Products.Add(product1);
-            dataStore.Products.Add(product2);
-            checkout.CurrentCart.Products.Add(cartProduct1);
-            checkout.CurrentCart.Products.Add(cartProduct2);
+            _dataStore.Products.Add(product1);
+            _dataStore.Products.Add(product2);
+            _checkout.CurrentCart.Products.Add(cartProduct1);
+            _checkout.CurrentCart.Products.Add(cartProduct2);
 
             // Act
-            checkout.LoadProductGroupDiscount();
+            _checkout.LoadProductGroupDiscount();
 
             // Assert
             Assert.AreEqual(29.97f, cartProduct1.ProducePrice); // Regular price: 3 * 9.99 = 29.97
@@ -399,15 +399,15 @@ namespace Brighthr.TechnicalInterview.Kumar.Checkout.TestSuit
                 ProducePrice = 0m // Initialize to 0 for testing
             };
 
-            dataStore.Products.Add(product1);
-            dataStore.Products.Add(product2);
-            dataStore.ProductGroupDiscounts.Add(discount1);
-            dataStore.ProductGroupDiscounts.Add(discount2);
-            checkout.CurrentCart.Products.Add(cartProduct1);
-            checkout.CurrentCart.Products.Add(cartProduct2);
+            _dataStore.Products.Add(product1);
+            _dataStore.Products.Add(product2);
+            _dataStore.ProductGroupDiscounts.Add(discount1);
+            _dataStore.ProductGroupDiscounts.Add(discount2);
+            _checkout.CurrentCart.Products.Add(cartProduct1);
+            _checkout.CurrentCart.Products.Add(cartProduct2);
 
             // Act
-            checkout.LoadProductGroupDiscount();
+            _checkout.LoadProductGroupDiscount();
 
             // Assert
             Assert.AreEqual(19.99m, cartProduct1.ProducePrice); // Discounted price: 2 * 5.0 + 1 * 9.99 =  19.99

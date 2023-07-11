@@ -5,32 +5,32 @@ namespace Brighthr.TechnicalInterview.Kumar.Checkout.TestSuit
     [TestFixture]
     public class CheckoutCartTests
     {
-        private IDataStore dataStore;
-        private IProductService productService;
-        private IProductGroupDiscountService productGroupDiscountService;
-        private CheckoutCart checkout;
+        private IDataStore _dataStore;
+        private IProductService _productService;
+        private IProductGroupDiscountService _productGroupDiscountService;
+        private CheckoutCart _checkout;
 
         [SetUp]
         public void Setup()
         {
-            dataStore = new InMemory();
-            productService = new ProductService(dataStore);
-            productGroupDiscountService = new ProductGroupDiscountService(dataStore);
-            checkout = new CheckoutCart(dataStore, productService, productGroupDiscountService);
+            _dataStore = new InMemory();
+            _productService = new ProductService(_dataStore);
+            _productGroupDiscountService = new ProductGroupDiscountService(_dataStore);
+            _checkout = new CheckoutCart(_dataStore, _productService, _productGroupDiscountService);
         }
 
         [Test]
         public void CreateCart_ShouldCreateNewCart()
         {
             // Act
-            var cart = checkout.CreateCart();
+            var cart = _checkout.CreateCart();
 
             // Assert
             Assert.IsNotNull(cart);
             Assert.AreEqual(1, cart.Id);
             Assert.AreEqual(0, cart.Products.Count);
-            Assert.AreEqual(1, dataStore.Carts.Count);
-            Assert.AreEqual(cart, dataStore.Carts[0]);
+            Assert.AreEqual(1, _dataStore.Carts.Count);
+            Assert.AreEqual(cart, _dataStore.Carts[0]);
         }
 
         [Test]
@@ -38,10 +38,10 @@ namespace Brighthr.TechnicalInterview.Kumar.Checkout.TestSuit
         {
             // Arrange
             var cart = new Cart { Id = 1 };
-            dataStore.Carts.Add(cart);
+            _dataStore.Carts.Add(cart);
 
             // Act
-            var result = checkout.GetCart(1);
+            var result = _checkout.GetCart(1);
 
             // Assert
             Assert.AreEqual(cart, result);
@@ -51,7 +51,7 @@ namespace Brighthr.TechnicalInterview.Kumar.Checkout.TestSuit
         public void GetCart_ShouldReturnNull_WhenCartDoesNotExist()
         {
             // Act
-            var result = checkout.GetCart(1);
+            var result = _checkout.GetCart(1);
 
             // Assert
             Assert.IsNull(result);
@@ -69,11 +69,11 @@ namespace Brighthr.TechnicalInterview.Kumar.Checkout.TestSuit
                 SKU = "ABC123",
                 Price = 9.99m
             };
-            dataStore.Products.Add(product);
-            var cart = checkout.CreateCart();
+            _dataStore.Products.Add(product);
+            var cart = _checkout.CreateCart();
 
             // Act
-            checkout.Scan("ABC123");
+            _checkout.Scan("ABC123");
 
             // Assert
             Assert.AreEqual(1, cart.Products.Count);
@@ -95,12 +95,12 @@ namespace Brighthr.TechnicalInterview.Kumar.Checkout.TestSuit
                 SKU = "ABC123",
                 Price = 9.99m
             };
-            dataStore.Products.Add(product);
-            var cart = checkout.CreateCart();
-            checkout.Scan("ABC123");
+            _dataStore.Products.Add(product);
+            var cart = _checkout.CreateCart();
+            _checkout.Scan("ABC123");
 
             // Act
-            checkout.Scan("ABC123");
+            _checkout.Scan("ABC123");
 
             // Assert
             Assert.AreEqual(1, cart.Products.Count);
@@ -114,7 +114,7 @@ namespace Brighthr.TechnicalInterview.Kumar.Checkout.TestSuit
         public void Scan_ShouldThrowException_WhenProductDoesNotExist()
         {
             // Act and Assert
-            Assert.Throws<Exception>(() => checkout.Scan("XYZ789"));
+            Assert.Throws<Exception>(() => _checkout.Scan("XYZ789"));
         }
 
         [Test]
@@ -124,10 +124,10 @@ namespace Brighthr.TechnicalInterview.Kumar.Checkout.TestSuit
             var cart = new Cart { Id = 1 };
             var product = new CartProduct { ProductId = 1 };
             cart.Products.Add(product);
-            dataStore.Carts.Add(cart);
+            _dataStore.Carts.Add(cart);
 
             // Act
-            checkout.RemoveProductFromCart(cart.Id, product.ProductId);
+            _checkout.RemoveProductFromCart(cart.Id, product.ProductId);
 
             // Assert
             Assert.AreEqual(0, cart.Products.Count);
@@ -137,7 +137,7 @@ namespace Brighthr.TechnicalInterview.Kumar.Checkout.TestSuit
         public void RemoveProductFromCart_ShouldThrowException_WhenCartDoesNotExist()
         {
             // Act and Assert
-            Assert.Throws<ArgumentException>(() => checkout.RemoveProductFromCart(1, 1));
+            Assert.Throws<ArgumentException>(() => _checkout.RemoveProductFromCart(1, 1));
         }
 
         [Test]
@@ -145,17 +145,13 @@ namespace Brighthr.TechnicalInterview.Kumar.Checkout.TestSuit
         {
             // Arrange
             var cart = new Cart { Id = 1 };
-            dataStore.Carts.Add(cart);
+            _dataStore.Carts.Add(cart);
 
             // Act and Assert
-            Assert.Throws<ArgumentException>(() => checkout.RemoveProductFromCart(cart.Id, 1));
+            Assert.Throws<ArgumentException>(() => _checkout.RemoveProductFromCart(cart.Id, 1));
         }
 
-        [Test]
-        public void GetTotalPrice_ShouldCalculateTotalPriceOfCart()
-        {
-            // TODO: Implement this test case
-        }
+        
     }
 
 }

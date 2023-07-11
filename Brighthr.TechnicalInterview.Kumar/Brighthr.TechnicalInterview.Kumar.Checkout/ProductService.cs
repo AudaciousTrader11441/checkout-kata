@@ -1,22 +1,7 @@
 ﻿using Brighthr.TechnicalInterview.Kumar.DataStore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Brighthr.TechnicalInterview.Kumar.Checkout
 {
-    public interface IProductService
-    {
-        void CreateProduct(Product product);
-        Product ReadProduct(int productId);
-        void UpdateProduct(Product updatedProduct);
-        void DeleteProduct(int productId);
-        Product ReadProductBySKU(string sku);
-    }
-
-
     /// <summary>
     /// Ideally This need to be in a different project for simplicity have included in the checkout project.
     /// Deals with basic CRUD operation.Could have assumed that this already exists but given its simple to create used it to get complete picture.

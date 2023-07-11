@@ -2,20 +2,11 @@
 
 namespace Brighthr.TechnicalInterview.Kumar.Checkout
 {
-    public interface ICheckout
-    {
-        Cart CreateCart();
-        Cart GetCart(int cartId);
-        void RemoveProductFromCart(int cartId, int productId);
-        void Scan(string item);
-        decimal GetTotalPrice();
-    }
-
     public class CheckoutCart : ICheckout
     {
         public Cart CurrentCart { get; set; }
         private IDataStore DataStore { get; set; }
-        private List<IDiscount> discounts { get; set; }
+        private List<IDiscount> Discounts { get; set; }
         private IProductService ProductService { get; set; }
 
         private IProductGroupDiscountService ProductGroupDiscountService { get; set; }
@@ -24,7 +15,7 @@ namespace Brighthr.TechnicalInterview.Kumar.Checkout
         public CheckoutCart(IDataStore dataStoreIn, IProductService productService, IProductGroupDiscountService productGroupDiscountService)
         {
             CurrentCart = new Cart();
-            discounts = new List<IDiscount>();
+            Discounts = new List<IDiscount>();
             ProductService = productService;
             DataStore = dataStoreIn;
             ProductGroupDiscountService = productGroupDiscountService;
@@ -52,7 +43,7 @@ namespace Brighthr.TechnicalInterview.Kumar.Checkout
             };
 
             DataStore.Carts.Add(cart);
-            CurrentCart=cart;
+            CurrentCart = cart;
             return cart;
         }
 
@@ -119,7 +110,7 @@ namespace Brighthr.TechnicalInterview.Kumar.Checkout
                         foreach (var discount in productDiscounts)
                         {
                             int discountMultiplier = (int)(remainingCount / discount.ProductCount);
-                            if(discountMultiplier>0) discounts.Add(discount);//add in all the discounts that are applied on the cart items.
+                            if (discountMultiplier > 0) Discounts.Add(discount);//add in all the discounts that are applied on the cart items.
                             decimal discountedPrice = discountMultiplier * discount.Price;
                             remainingCount -= discountMultiplier * discount.ProductCount;
                             totalDiscountedPrice += discountedPrice;

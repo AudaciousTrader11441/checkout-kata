@@ -7,14 +7,14 @@ namespace Brighthr.TechnicalInterview.Kumar.DataStore.TestSuit
     [TestFixture]
     public class ProductServiceTests
     {
-        private IDataStore dataStore;
-        private IProductService productService;
+        private IDataStore _dataStore;
+        private IProductService _productService;
 
         [SetUp]
         public void Initialize()
         {
-            dataStore = new InMemory();
-            productService = new ProductService(dataStore);
+            _dataStore = new InMemory();
+            _productService = new ProductService(_dataStore);
         }
 
         [Test]
@@ -30,11 +30,11 @@ namespace Brighthr.TechnicalInterview.Kumar.DataStore.TestSuit
             };
 
             // Act
-            productService.CreateProduct(product);
+            _productService.CreateProduct(product);
 
             // Assert
-            Assert.AreEqual(1, dataStore.Products.Count);
-            Assert.AreEqual(product, dataStore.Products[0]);
+            Assert.AreEqual(1, _dataStore.Products.Count);
+            Assert.AreEqual(product, _dataStore.Products[0]);
         }
 
         [Test]
@@ -48,10 +48,10 @@ namespace Brighthr.TechnicalInterview.Kumar.DataStore.TestSuit
                 SKU = "SKU001",
                 Price = 9.99m
             };
-            dataStore.Products.Add(product);
+            _dataStore.Products.Add(product);
 
             // Act
-            var result = productService.ReadProduct(1);
+            var result = _productService.ReadProduct(1);
 
             // Assert
             Assert.AreEqual(product, result);
@@ -68,7 +68,7 @@ namespace Brighthr.TechnicalInterview.Kumar.DataStore.TestSuit
                 SKU = "SKU001",
                 Price = 9.99m
             };
-            dataStore.Products.Add(product);
+            _dataStore.Products.Add(product);
 
             var updatedProduct = new Product
             {
@@ -79,8 +79,8 @@ namespace Brighthr.TechnicalInterview.Kumar.DataStore.TestSuit
             };
 
             // Act
-            productService.UpdateProduct(updatedProduct);
-            var result = dataStore.Products.FirstOrDefault(p => p.Id == updatedProduct.Id);
+            _productService.UpdateProduct(updatedProduct);
+            var result = _dataStore.Products.FirstOrDefault(p => p.Id == updatedProduct.Id);
 
             // Assert
             Assert.IsNotNull(result);
@@ -100,11 +100,11 @@ namespace Brighthr.TechnicalInterview.Kumar.DataStore.TestSuit
                 SKU = "SKU001",
                 Price = 9.99m
             };
-            dataStore.Products.Add(product);
+            _dataStore.Products.Add(product);
 
             // Act
-            productService.DeleteProduct(1);
-            var result = dataStore.Products.FirstOrDefault(p => p.Id == 1);
+            _productService.DeleteProduct(1);
+            var result = _dataStore.Products.FirstOrDefault(p => p.Id == 1);
 
             // Assert
             Assert.IsNull(result);
@@ -121,10 +121,10 @@ namespace Brighthr.TechnicalInterview.Kumar.DataStore.TestSuit
                 SKU = "ABC123",
                 Price = 9.99m
             };
-            dataStore.Products.Add(product);
+            _dataStore.Products.Add(product);
 
             // Act
-            var result = productService.ReadProductBySKU("ABC123");
+            var result = _productService.ReadProductBySKU("ABC123");
 
             // Assert
             Assert.NotNull(result);
@@ -140,7 +140,7 @@ namespace Brighthr.TechnicalInterview.Kumar.DataStore.TestSuit
             // Arrange - No products added to the data store
 
             // Act and Assert
-            Assert.Throws<ArgumentException>(() => productService.ReadProductBySKU("XYZ789"));
+            Assert.Throws<ArgumentException>(() => _productService.ReadProductBySKU("XYZ789"));
         }
 
     }
