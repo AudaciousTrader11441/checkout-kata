@@ -8,7 +8,7 @@ namespace Brighthr.TechnicalInterview.Kumar.Checkout
         Cart GetCart(int cartId);
         void RemoveProductFromCart(int cartId, int productId);
         void Scan(string item);
-        int GetTotalPrice();
+        decimal GetTotalPrice();
     }
 
     public class CheckoutCart : ICheckout
@@ -119,6 +119,7 @@ namespace Brighthr.TechnicalInterview.Kumar.Checkout
                         foreach (var discount in productDiscounts)
                         {
                             int discountMultiplier = (int)(remainingCount / discount.ProductCount);
+                            if(discountMultiplier>0) discounts.Add(discount);//add in all the discounts that are applied on the cart items.
                             decimal discountedPrice = discountMultiplier * discount.Price;
                             remainingCount -= discountMultiplier * discount.ProductCount;
                             totalDiscountedPrice += discountedPrice;
@@ -155,9 +156,11 @@ namespace Brighthr.TechnicalInterview.Kumar.Checkout
                 throw new ArgumentException("Cart does not exist.");
             }
         }
-        public int GetTotalPrice()
+        public decimal GetTotalPrice()
         {
-            throw new NotImplementedException();
+            LoadProductGroupDiscount();
+            decimal totalCost = CurrentCart.Products.Sum(e => e.ProducePrice);
+            return totalCost;
         }
     }
 }
