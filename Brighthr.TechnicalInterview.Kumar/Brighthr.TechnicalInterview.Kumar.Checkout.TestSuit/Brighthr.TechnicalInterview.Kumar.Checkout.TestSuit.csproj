@@ -16,4 +16,9 @@
     <PackageReference Include="coverlet.collector" Version="3.1.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Brighthr.TechnicalInterview.Kumar.Checkout\Brighthr.TechnicalInterview.Kumar.Checkout.csproj" />
+    <ProjectReference Include="..\Brighthr.TechnicalInterview.Kumar.Datastore\Brighthr.TechnicalInterview.Kumar.DataStore.csproj" />
+  </ItemGroup>
+
 </Project>

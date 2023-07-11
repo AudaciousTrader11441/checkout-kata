@@ -109,6 +109,40 @@ namespace Brighthr.TechnicalInterview.Kumar.DataStore.TestSuit
             // Assert
             Assert.IsNull(result);
         }
+
+        [Test]
+        public void ReadProductBySKU_ShouldReturnProduct_WhenProductExists()
+        {
+            // Arrange
+            var product = new Product
+            {
+                Id = 1,
+                Name = "Example Product",
+                SKU = "ABC123",
+                Price = 9.99f
+            };
+            dataStore.Products.Add(product);
+
+            // Act
+            var result = productService.ReadProductBySKU("ABC123");
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.AreEqual(product.Id, result.Id);
+            Assert.AreEqual(product.Name, result.Name);
+            Assert.AreEqual(product.SKU, result.SKU);
+            Assert.AreEqual(product.Price, result.Price);
+        }
+
+        [Test]
+        public void ReadProductBySKU_ShouldThrowException_WhenProductDoesNotExist()
+        {
+            // Arrange - No products added to the data store
+
+            // Act and Assert
+            Assert.Throws<ArgumentException>(() => productService.ReadProductBySKU("XYZ789"));
+        }
+
     }
 
 

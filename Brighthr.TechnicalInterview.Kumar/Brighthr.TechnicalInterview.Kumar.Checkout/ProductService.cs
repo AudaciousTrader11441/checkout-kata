@@ -13,6 +13,7 @@ namespace Brighthr.TechnicalInterview.Kumar.Checkout
         Product ReadProduct(int productId);
         void UpdateProduct(Product updatedProduct);
         void DeleteProduct(int productId);
+        Product ReadProductBySKU(string sku);
     }
 
 
@@ -58,6 +59,18 @@ namespace Brighthr.TechnicalInterview.Kumar.Checkout
                 dataStore.Products.Remove(product);
             }
         }
+
+        public Product ReadProductBySKU(string sku)
+        {
+            var product = dataStore.Products.FirstOrDefault(p => p.SKU == sku);
+            if (product == null)
+            {
+                throw new ArgumentException("Product with the specified SKU does not exist.");
+            }
+
+            return product;
+        }
+
     }
 
 
