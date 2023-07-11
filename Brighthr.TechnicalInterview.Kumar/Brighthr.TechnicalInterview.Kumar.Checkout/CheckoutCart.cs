@@ -13,18 +13,21 @@ namespace Brighthr.TechnicalInterview.Kumar.Checkout
 
     public class CheckoutCart : ICheckout
     {
-        private Cart CurrentCart { get; set; }
+        public Cart CurrentCart { get; set; }
         private IDataStore DataStore { get; set; }
         private List<IDiscount> discounts { get; set; }
         private IProductService ProductService { get; set; }
+
+        private IProductGroupDiscountService ProductGroupDiscountService { get; set; }
         private int itemCount { get; set; }
 
-        public CheckoutCart(IDataStore dataStoreIn, IProductService productService)
+        public CheckoutCart(IDataStore dataStoreIn, IProductService productService, IProductGroupDiscountService productGroupDiscountService)
         {
             CurrentCart = new Cart();
             discounts = new List<IDiscount>();
             ProductService = productService;
             DataStore = dataStoreIn;
+            ProductGroupDiscountService = productGroupDiscountService;
             itemCount = 1;
         }
 
@@ -95,7 +98,42 @@ namespace Brighthr.TechnicalInterview.Kumar.Checkout
             }
         }
 
+        public void LoadProductGroupDiscount()
+        {
+            foreach (var item in CurrentCart.Products)
+            {
+                var product = ProductService.ReadProduct(item.ProductId);
 
+                if (product != null)
+                {
+                    var productDiscounts = ProductGroupDiscountService.GetApplicableDiscounts(item.ProductId, item.Count)
+                        .OfType<ProductGroupDiscount>()
+                        .OrderByDescending(d => d.ProductCount)
+                        .ToList();
+
+                    if (productDiscounts.Any())
+                    {
+                        decimal remainingCount = item.Count;
+                        decimal totalDiscountedPrice = 0;
+
+                        foreach (var discount in productDiscounts)
+                        {
+                            int discountMultiplier = (int)(remainingCount / discount.ProductCount);
+                            decimal discountedPrice = discountMultiplier * discount.Price;
+                            remainingCount -= discountMultiplier * discount.ProductCount;
+                            totalDiscountedPrice += discountedPrice;
+                        }
+
+                        decimal remainingPrice = remainingCount * product.Price;
+                        item.ProducePrice = totalDiscountedPrice + remainingPrice;
+                    }
+                    else
+                    {
+                        item.ProducePrice = item.Count * product.Price;
+                    }
+                }
+            }
+        }
 
         public void RemoveProductFromCart(int cartId, int productId)
         {

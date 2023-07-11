@@ -13,6 +13,7 @@ namespace Brighthr.TechnicalInterview.Kumar.Checkout
         ProductGroupDiscount ReadProductGroupDiscount(int discountId);
         void UpdateProductGroupDiscount(ProductGroupDiscount updatedDiscount);
         void DeleteProductGroupDiscount(int discountId);
+        List<IDiscount> GetApplicableDiscounts(int productId, int productCount);
     }
 
     public class ProductGroupDiscountService : IProductGroupDiscountService
@@ -81,6 +82,16 @@ namespace Brighthr.TechnicalInterview.Kumar.Checkout
                 throw new ArgumentException("Product discount associated with the discount does not exist.");
             }
         }
+
+        public List<IDiscount> GetApplicableDiscounts(int productId, int productCount)
+        {
+            var discounts = dataStore.ProductGroupDiscounts
+                .Where(d => d.ProductId == productId && d.ProductCount <= productCount)
+                .ToList();
+
+            return discounts.Cast<IDiscount>().ToList();
+        }
+
 
 
         private int GenerateNewId()

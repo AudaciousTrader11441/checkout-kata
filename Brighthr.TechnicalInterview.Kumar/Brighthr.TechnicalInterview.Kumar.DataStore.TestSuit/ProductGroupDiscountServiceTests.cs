@@ -30,7 +30,7 @@ namespace Brighthr.TechnicalInterview.Kumar.DataStore.TestSuit
                 Id = 1,
                 Name = "Example Product",
                 SKU = "SKU001",
-                Price = 9.99f
+                Price = 9.99m
             };
             dataStore.Products.Add(product);
             var discount = new ProductGroupDiscount
@@ -38,7 +38,7 @@ namespace Brighthr.TechnicalInterview.Kumar.DataStore.TestSuit
                 Id = 10, // Ignoring the passed-in ID
                 ProductId = 1,
                 DiscountName = "Example Discount",
-                Price = 19.99f,
+                Price = 19.99m,
                 ProductCount = 5
             };
 
@@ -67,7 +67,7 @@ namespace Brighthr.TechnicalInterview.Kumar.DataStore.TestSuit
                 Id = 1,
                 Name = "Example Product",
                 SKU = "SKU001",
-                Price = 9.99f
+                Price = 9.99m
             };
             dataStore.Products.Add(product);
 
@@ -75,7 +75,7 @@ namespace Brighthr.TechnicalInterview.Kumar.DataStore.TestSuit
             {
                 ProductId = product.Id,
                 DiscountName = "Example Discount",
-                Price = 19.99f,
+                Price = 19.99m,
                 ProductCount = 5
             };
 
@@ -100,7 +100,7 @@ namespace Brighthr.TechnicalInterview.Kumar.DataStore.TestSuit
             {
                 ProductId = 1, // Non-existent product ID
                 DiscountName = "Example Discount",
-                Price = 19.99f,
+                Price = 19.99m,
                 ProductCount = 5
             };
 
@@ -117,7 +117,7 @@ namespace Brighthr.TechnicalInterview.Kumar.DataStore.TestSuit
                 Id = 1,
                 Name = "Example Product",
                 SKU = "SKU001",
-                Price = 9.99f
+                Price = 9.99m
             };
             dataStore.Products.Add(product);
 
@@ -126,7 +126,7 @@ namespace Brighthr.TechnicalInterview.Kumar.DataStore.TestSuit
                 Id = 1,
                 ProductId = product.Id,
                 DiscountName = "Existing Discount",
-                Price = 19.99f,
+                Price = 19.99m,
                 ProductCount = 5
             };
             dataStore.ProductGroupDiscounts.Add(existingDiscount);
@@ -136,7 +136,7 @@ namespace Brighthr.TechnicalInterview.Kumar.DataStore.TestSuit
                 Id = existingDiscount.Id,
                 ProductId = product.Id,
                 DiscountName = "Updated Discount",
-                Price = 29.99f,
+                Price = 29.99m,
                 ProductCount = 10
             };
 
@@ -160,7 +160,7 @@ namespace Brighthr.TechnicalInterview.Kumar.DataStore.TestSuit
                 Id = 1, // Non-existent discount ID
                 ProductId = 1,
                 DiscountName = "Updated Discount",
-                Price = 29.99f,
+                Price = 29.99m,
                 ProductCount = 10
             };
 
@@ -177,7 +177,7 @@ namespace Brighthr.TechnicalInterview.Kumar.DataStore.TestSuit
                 Id = 1,
                 ProductId = 1, // Non-existent product ID
                 DiscountName = "Existing Discount",
-                Price = 19.99f,
+                Price = 19.99m,
                 ProductCount = 5
             };
             dataStore.ProductGroupDiscounts.Add(existingDiscount);
@@ -187,7 +187,7 @@ namespace Brighthr.TechnicalInterview.Kumar.DataStore.TestSuit
                 Id = existingDiscount.Id,
                 ProductId = 2, // Non-existent product ID
                 DiscountName = "Updated Discount",
-                Price = 29.99f,
+                Price = 29.99m,
                 ProductCount = 10
             };
 
@@ -204,7 +204,7 @@ namespace Brighthr.TechnicalInterview.Kumar.DataStore.TestSuit
                 Id = 1,
                 ProductId = 1,
                 DiscountName = "Example Discount",
-                Price = 19.99f,
+                Price = 19.99m,
                 ProductCount = 5
             };
             dataStore.ProductGroupDiscounts.Add(discount);
@@ -225,7 +225,7 @@ namespace Brighthr.TechnicalInterview.Kumar.DataStore.TestSuit
                 Id = 1,
                 Name = "Example Product",
                 SKU = "SKU001",
-                Price = 9.99f
+                Price = 9.99m
             };
             dataStore.Products.Add(product);
 
@@ -234,7 +234,7 @@ namespace Brighthr.TechnicalInterview.Kumar.DataStore.TestSuit
                 Id = 1,
                 ProductId = product.Id,
                 DiscountName = "Existing Discount",
-                Price = 19.99f,
+                Price = 19.99m,
                 ProductCount = 5
             };
             dataStore.ProductGroupDiscounts.Add(existingDiscount);
@@ -256,7 +256,80 @@ namespace Brighthr.TechnicalInterview.Kumar.DataStore.TestSuit
             Assert.Throws<ArgumentException>(() => discountService.DeleteProductGroupDiscount(discountId));
         }
 
-        
+        [Test]
+        public void GetApplicableDiscounts_ShouldReturnMatchingDiscounts_WhenProductAndCountMatch()
+        {
+            // Arrange
+            var discount1 = new ProductGroupDiscount
+            {
+                ProductId = 1,
+                ProductCount = 3,
+                Price = 130
+            };
+            var discount2 = new ProductGroupDiscount
+            {
+                ProductId = 1,
+                ProductCount = 5,
+                Price = 200
+            };
+            dataStore.ProductGroupDiscounts.AddRange(new List<ProductGroupDiscount> { discount1, discount2 });
+
+            // Act
+            var discounts = discountService.GetApplicableDiscounts(1, 3);
+
+            // Assert
+            Assert.IsNotNull(discounts);
+            Assert.AreEqual(1, discounts.Count);
+            Assert.Contains(discount1, discounts);
+        }
+
+        [Test]
+        public void GetApplicableDiscounts_ShouldReturnEmptyList_WhenNoMatchingDiscountsExist()
+        {
+            // Arrange
+            var discount = new ProductGroupDiscount
+            {
+                ProductId = 1,
+                ProductCount = 3,
+                Price = 130
+            };
+            dataStore.ProductGroupDiscounts.Add(discount);
+
+            // Act
+            var discounts = discountService.GetApplicableDiscounts(2, 3);
+
+            // Assert
+            Assert.IsNotNull(discounts);
+            Assert.AreEqual(0, discounts.Count);
+        }
+
+        [Test]
+        public void GetApplicableDiscounts_ShouldReturnMultipleMatchingDiscounts_WhenProductAndCountMatchMultipleDiscounts()
+        {
+            // Arrange
+            var discount1 = new ProductGroupDiscount
+            {
+                ProductId = 1,
+                ProductCount = 2,
+                Price = 45
+            };
+            var discount2 = new ProductGroupDiscount
+            {
+                ProductId = 1,
+                ProductCount = 3,
+                Price = 60
+            };
+            dataStore.ProductGroupDiscounts.AddRange(new List<ProductGroupDiscount> { discount1, discount2 });
+
+            // Act
+            var discounts = discountService.GetApplicableDiscounts(1, 3);
+
+            // Assert
+            Assert.IsNotNull(discounts);
+            Assert.AreEqual(2, discounts.Count);
+            Assert.Contains(discount1, discounts);
+            Assert.Contains(discount2, discounts);
+        }
 
     }
 

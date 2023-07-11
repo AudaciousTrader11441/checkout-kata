@@ -27,14 +27,14 @@
        public int Id { get; set; }
        public string Name { get; set; }
        public string SKU { get; set; }
-       public float Price { get; set; }
+       public decimal Price { get; set; }
     }
 
     public interface IDiscount
     {
         public int Id { get; set; }
         public string DiscountName { get; set; }
-        public float Price { get; set; }
+        public decimal Price { get; set; }
 
     }
 
@@ -43,7 +43,7 @@
         public int Id { get; set; }
         public int ProductId { get; set;}
         public string DiscountName { get; set; }
-        public float Price { get; set; }
+        public decimal Price { get; set; }
         public int ProductCount { get; set; }
 
     }
@@ -66,6 +66,6 @@
         public int ProductId { get; set; }
         public int CartId { get; set; }
         public int Count { get; set; }
-        public float ProducePrice { get; set; }
+        public decimal ProducePrice { get; set; }
     }
 }

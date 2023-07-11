@@ -26,7 +26,7 @@ namespace Brighthr.TechnicalInterview.Kumar.DataStore.TestSuit
                 Id = 1,
                 Name = "Example Product",
                 SKU = "SKU001",
-                Price = 9.99f
+                Price = 9.99m
             };
 
             // Act
@@ -46,7 +46,7 @@ namespace Brighthr.TechnicalInterview.Kumar.DataStore.TestSuit
                 Id = 1,
                 Name = "Example Product",
                 SKU = "SKU001",
-                Price = 9.99f
+                Price = 9.99m
             };
             dataStore.Products.Add(product);
 
@@ -66,7 +66,7 @@ namespace Brighthr.TechnicalInterview.Kumar.DataStore.TestSuit
                 Id = 1,
                 Name = "Example Product",
                 SKU = "SKU001",
-                Price = 9.99f
+                Price = 9.99m
             };
             dataStore.Products.Add(product);
 
@@ -75,7 +75,7 @@ namespace Brighthr.TechnicalInterview.Kumar.DataStore.TestSuit
                 Id = 1,
                 Name = "Updated Product",
                 SKU = "SKU002",
-                Price = 19.99f
+                Price = 19.99m
             };
 
             // Act
@@ -98,7 +98,7 @@ namespace Brighthr.TechnicalInterview.Kumar.DataStore.TestSuit
                 Id = 1,
                 Name = "Example Product",
                 SKU = "SKU001",
-                Price = 9.99f
+                Price = 9.99m
             };
             dataStore.Products.Add(product);
 
@@ -119,7 +119,7 @@ namespace Brighthr.TechnicalInterview.Kumar.DataStore.TestSuit
                 Id = 1,
                 Name = "Example Product",
                 SKU = "ABC123",
-                Price = 9.99f
+                Price = 9.99m
             };
             dataStore.Products.Add(product);
 

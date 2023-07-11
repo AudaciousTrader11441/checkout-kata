@@ -7,14 +7,16 @@ namespace Brighthr.TechnicalInterview.Kumar.Checkout.TestSuit
     {
         private IDataStore dataStore;
         private IProductService productService;
-        private ICheckout checkout;
+        private IProductGroupDiscountService productGroupDiscountService;
+        private CheckoutCart checkout;
 
         [SetUp]
         public void Setup()
         {
             dataStore = new InMemory();
             productService = new ProductService(dataStore);
-            checkout = new CheckoutCart(dataStore, productService);
+            productGroupDiscountService = new ProductGroupDiscountService(dataStore);
+            checkout = new CheckoutCart(dataStore, productService, productGroupDiscountService);
         }
 
         [Test]
@@ -65,7 +67,7 @@ namespace Brighthr.TechnicalInterview.Kumar.Checkout.TestSuit
                 Id = 1,
                 Name = "Example Product",
                 SKU = "ABC123",
-                Price = 9.99f
+                Price = 9.99m
             };
             dataStore.Products.Add(product);
             var cart = checkout.CreateCart();
@@ -91,7 +93,7 @@ namespace Brighthr.TechnicalInterview.Kumar.Checkout.TestSuit
                 Id = 1,
                 Name = "Example Product",
                 SKU = "ABC123",
-                Price = 9.99f
+                Price = 9.99m
             };
             dataStore.Products.Add(product);
             var cart = checkout.CreateCart();
